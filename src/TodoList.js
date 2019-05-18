@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import './style.css'
+import TodoItem from './TodoItem'
 
 class TodoList extends Component {
     constructor(props) {
@@ -10,8 +11,6 @@ class TodoList extends Component {
         }
     }
 
-	/**render函数返回的JSX模板最外层只能由一个包裹元素
-	 * 使用Fragment做占位符，只起包裹作用，并不会渲染成DOM元素 */
     render() {
         return (
             <Fragment>
@@ -25,7 +24,7 @@ class TodoList extends Component {
                 <ul>
                     {
                         this.state.list.map((item, index) => {
-                            return <li key={index} onClick={this.handleItemClick.bind(this, index)}>{item}</li>
+                            return <TodoItem key={index} item={item} deleteItem={this.handleItemClick.bind(this, index)} />
                         })
                     }
                 </ul>
