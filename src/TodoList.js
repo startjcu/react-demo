@@ -9,6 +9,10 @@ class TodoList extends Component {
             inputValue: '',
             list: []
         }
+        this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleBtnClick = this.handleBtnClick.bind(this)
+        this.handleItemClick = this.handleItemClick.bind(this)
+        this.handleKeyDown = this.handleKeyDown.bind(this)
     }
 
     render() {
@@ -17,37 +21,45 @@ class TodoList extends Component {
                 <div>
                     <input
                         value={this.state.inputValue}
-                        onChange={this.handleInputChange.bind(this)}
+                        onChange={this.handleInputChange}
+                        onKeyDown={this.handleKeyDown}
                     />
-                    <button onClick={this.handleBtnClick.bind(this)}>submit</button>
+                    <button onClick={this.handleBtnClick}>submit</button>
                 </div>
                 <ul>
-                    {
-                        this.state.list.map((item, index) => {
-                            return <TodoItem key={index} item={item} deleteItem={this.handleItemClick.bind(this, index)} />
-                        })
-                    }
+                    {this.getTodoItem()}
                 </ul>
             </Fragment>
         )
     }
-    handleInputChange(e) {
-        this.setState({
-            inputValue: e.target.value
+    getTodoItem() {
+        const { list } = this.state
+        return list.map((item, index) => {
+            return <TodoItem key={index} item={item} deleteItem={() => { this.handleItemClick(index) }} />
         })
+    }
+    handleInputChange(e) {
+        const value = e.target.value
+        this.setState(() => ({
+            inputValue: value
+        }))
     }
     handleBtnClick() {
-        this.setState({
-            list: [...this.state.list, this.state.inputValue],
+        this.setState((prevState) => ({
+            list: [...prevState.list, prevState.inputValue],
             inputValue: ''
-        })
+        }))
     }
     handleItemClick(index) {
-        const list = [...this.state.list]
-        list.splice(index, 1)
-        this.setState({
-            list: list
+        this.setState((prevState) => {
+            const list = [...prevState.list]
+            list.splice(index, 1)
+            return { list }
         })
+    }
+    handleKeyDown(e) {
+        if (e.keyCode === 13)
+            this.handleBtnClick()
     }
 }
 

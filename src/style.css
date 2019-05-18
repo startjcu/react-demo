@@ -1,3 +1,7 @@
 input {
     outline: none
 }
+
+li {
+    cursor: pointer;
+}
