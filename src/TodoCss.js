@@ -1,27 +1,34 @@
 import React, { Component, Fragment } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import './style.css'
 
 class TodoCss extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { flag: true }
+        this.state = { list: [] }
     }
 
     render() {
         return (
             <Fragment>
-                <CSSTransition
-                    in={this.state.flag}
-                    timeout={1000}
-                    classNames='fade'
-                    unmountOnExit
-                    appear={true}
-                    onEntered={(el) => { el.style.color = 'red' }}
-                >
-                    <div>hello</div>
-                </CSSTransition>
+                <TransitionGroup>
+                    {
+                        this.state.list.map((item, index) => {
+                            return (
+                                <CSSTransition key={index}
+                                    in={this.state.flag}
+                                    timeout={1000}
+                                    classNames='fade'
+                                    unmountOnExit
+                                    appear={true}
+                                    onEntered={(el) => { el.style.color = 'red' }}
+                                >
+                                    <div>{item}</div>
+                                </CSSTransition>)
+                        })
+                    }
+                </TransitionGroup>
                 <button onClick={this.handleBtnClick.bind(this)}>toggle</button>
             </Fragment>
         )
@@ -29,7 +36,7 @@ class TodoCss extends Component {
 
     handleBtnClick() {
         this.setState(() => ({
-            flag: !this.state.flag
+            list: [...this.state.list, 'item']
         }))
     }
 }
