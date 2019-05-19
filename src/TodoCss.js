@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react'
+import { CSSTransition } from 'react-transition-group'
 import './style.css'
 
 class TodoCss extends Component {
@@ -11,7 +12,16 @@ class TodoCss extends Component {
     render() {
         return (
             <Fragment>
-                <div className={this.state.flag ? 'show' : 'hide'}>hello</div>
+                <CSSTransition
+                    in={this.state.flag}
+                    timeout={1000}
+                    classNames='fade'
+                    unmountOnExit
+                    appear={true}
+                    onEntered={(el) => { el.style.color = 'red' }}
+                >
+                    <div>hello</div>
+                </CSSTransition>
                 <button onClick={this.handleBtnClick.bind(this)}>toggle</button>
             </Fragment>
         )
