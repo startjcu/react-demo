@@ -1,4 +1,5 @@
 import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DEL_TODO_ITEM, INIT_LIST } from './actionTypes'
+import axios from 'axios'
 
 export const getInputChangeAction = (value) => ({
     type: CHANGE_INPUT_VALUE,
@@ -14,7 +15,17 @@ export const getDelItemAction = (index) => ({
     index
 })
 
-export const getInitAction = (list) => ({
+const getInitAction = (list) => ({
     type: INIT_LIST,
     list
 })
+
+export const getAjaxAction = () => {
+    return (dispatch) => {
+        axios.get('/api/list.json').then((res) => {
+            const list = res.data.list
+            const action = getInitAction(list)
+            dispatch(action)
+        })
+    }
+}
