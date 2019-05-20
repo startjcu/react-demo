@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
 import 'antd/dist/antd.css'
 import { Input, Button, List } from 'antd'
+import store from './store'
 
 class TodoListAntd extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            inputValue: '',
-            list: []
-        }
+        this.state = store.getState()
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleBtnClick = this.handleBtnClick.bind(this)
         this.handleItemClick = this.handleItemClick.bind(this)
         this.handleKeyDown = this.handleKeyDown.bind(this)
+        this.handleStoreChange = this.handleStoreChange.bind(this)
+        store.subscribe(this.handleStoreChange)
+
     }
 
     render() {
@@ -24,7 +25,7 @@ class TodoListAntd extends Component {
                     value={inputValue}
                     onChange={this.handleInputChange}
                     onKeyDown={this.handleKeyDown}
-                    placeholder='请输入项目'
+                    placeholder='todo item'
                     style={{ width: '300px' }}
                 />
                 <Button
@@ -43,30 +44,35 @@ class TodoListAntd extends Component {
     }
 
     handleInputChange(e) {
-        const value = e.target.value
-        this.setState(() => ({
-            inputValue: value
-        }))
+        const action = {
+            type: 'change_input_value',
+            value: e.target.value
+        }
+        store.dispatch(action)
     }
 
     handleBtnClick() {
-        this.setState((prevState) => ({
-            list: [...prevState.list, prevState.inputValue],
-            inputValue: ''
-        }))
+        const action = {
+            type: 'add_todo_item'
+        }
+        store.dispatch(action)
     }
 
     handleItemClick(index) {
-        this.setState((prevState) => {
-            const list = [...prevState.list]
-            list.splice(index, 1)
-            return { list }
-        })
+        const action = {
+            type: 'del_todo_item',
+            index
+        }
+        store.dispatch(action)
     }
 
     handleKeyDown(e) {
         if (e.keyCode === 13)
             this.handleBtnClick()
+    }
+
+    handleStoreChange() {
+        this.setState(store.getState())
     }
 }
 
